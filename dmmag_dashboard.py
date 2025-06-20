@@ -88,10 +88,16 @@ def update_charts(selected_enslaver, selected_data_source):
     bar_fig = px.bar(
         enslaver_counts, x='enslaver', y='enslaved_name',
         labels={'enslaver': 'Enslaver', 'enslaved_name': 'Number of Enslaved People'},
-        title="Number of Enslaved People by Enslaver",
+         #title="Total Count of Enslaved People by Enslaver Names",
+        title=(
+        "Total Count of Enslaved People by Enslaver Names<br>"
+        "<span style='font-size:14px; font-style:italic;'>"
+        "Note: Total count assessed from Troy Records and 1850 Slave Schedule may include some duplication where individuals appear in both sources.</span>"
+        ),
         text='enslaved_name'
     )
     bar_fig.update_traces(texttemplate='%{text}', textposition='outside')
+
 
     # Doughnut Chart
     gender_counts = filtered_df['enslaved_genagedesc'].value_counts().reset_index()
@@ -109,7 +115,7 @@ def update_charts(selected_enslaver, selected_data_source):
     bubble_fig = px.scatter(
         age_counts, x='age_group', y=[0]*len(age_counts),
         size='count', color='age_group', hover_name='age_group',
-        title="Distribution of Enslaved People by Age Group (Bubble Chart)",
+        title="Distribution of Enslaved People by Age Group",
         size_max=60
     )
     bubble_fig.update_traces(marker=dict(line=dict(width=2, color='DarkSlateGrey')))
@@ -118,7 +124,7 @@ def update_charts(selected_enslaver, selected_data_source):
     # Enslaved Name List
     enslaved_names = filtered_df['enslaved_name'].dropna().unique()
     enslaved_list = [html.P(name) for name in enslaved_names]
-    title_text = f"Enslaved People under {selected_enslaver}" if selected_enslaver and selected_enslaver != 'All' else "Enslaved People (All Records)"
+    title_text = f"Enslaved People Listed by Name under {selected_enslaver}" if selected_enslaver and selected_enslaver != 'All' else "Enslaved People Listed by Name (All Records)"
     enslaved_names_div = html.Div([html.H4(title_text)] + enslaved_list)
 
     return bar_fig, doughnut_fig, bubble_fig, enslaved_names_div
